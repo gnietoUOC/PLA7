@@ -62,15 +62,18 @@ void Base::pub(char *tag,char *value) {
     getPath(path);
 
     if (tag!=NULL) {
+    // Estamos publicando una propiedad
       sprintf(data,"%s/%s",path,tag);
+      // Compruebo si quiero borrar un retain
       if (value!=NULL) {
         client->publish(data,value,MQRETAIN);
       } else {
-        client->publish(data,NULL,0,MQRETAIN);
+        client->publish(data,NULL,0,true);
       }
       DPRINTLN(data);
       Serial.println(data);
     } else {
+    // Estamos publicando el valor de una propiedad
       client->publish(path,value,false);
       // Después de publicar el mensaje guardamos una entrada 
       // en un fichero en la tarjeta
@@ -869,4 +872,7 @@ LED::LED(PubSubClient *client, Node *parent, int pin) : Pin(client, parent,(char
 }
 
 Relay::Relay(PubSubClient *client, Node *parent, int pin) : Pin(client, parent,(char *)"Relay",pin) {
+
+  set(false); // Empiezo con estado conocido
+  
 }

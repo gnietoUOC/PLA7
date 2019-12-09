@@ -1,0 +1,66 @@
+<html>
+	<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.2/mqttws31.min.js"></script>
+	</head>
+	<body>
+		<input id='relay01ON' type='button' value='ON'>
+		<input id='relay01OFF' type='button' value='OFF'>
+	</body>
+
+	<script>
+
+	$(document).ready(function() {
+		init()
+
+
+		$('#relay01ON').click(function(e) {
+        
+			alert('Clicked');
+      
+			send('Relay01','ON');
+		});
+    
+		$('#relay01OFF').click(function(e) {
+        
+			alert('Clicked');
+      
+			send('Relay01','OFF');
+		});
+    
+	});	
+
+	function init() {
+		client = new Paho.MQTT.Client("192.168.0.159", 8081, "grafana");
+		client.onConnectionLost = onConnectionLost;
+
+		var options = {
+		    useSSL: true,
+		    userName: "genaro",
+		    password: "passw0rd",
+		    onSuccess:onConnect
+//		    onFailure:doFail
+	  	}
+		client.connect(options);
+	}
+
+	function send(prop,value) {
+		var message = new Paho.MQTT.Message(value);
+		message.destinationName = 'Homie/MKR1000/MKRENV/'+prop+'/Set';
+  		client.send(message);
+	}
+
+	function onConnect() {
+		alert('Connected');
+      
+	}
+
+	function onConnectionLost() {
+		alert('Disconnected');
+      
+	}
+
+	</script>
+
+</html>
+

@@ -9,7 +9,7 @@
 #define NA              -1000
 
 #define SECURED
-#define EC2
+//#define EC2
 //#define ZT
 
 #ifdef EC2
